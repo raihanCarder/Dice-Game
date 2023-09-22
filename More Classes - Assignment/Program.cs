@@ -17,7 +17,7 @@ namespace Dice_Game
             string name;
             int selection = 0;
             double bank = 100, betAmount = 0;
-            bool validSelection = false, validBet = false;
+            bool validSelection = false;
             Die die1 = new Die();
             Thread.Sleep(1000);
             Die die2 = new Die();
