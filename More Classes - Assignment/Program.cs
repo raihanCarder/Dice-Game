@@ -79,7 +79,7 @@ namespace Dice_Game
 
                     if (Double.TryParse(Console.ReadLine(), out betAmount))
                     {
-                        validBet = true;
+                       
                         if (betAmount > bank)
                         {
                             betAmount = bank;
