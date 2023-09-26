@@ -17,7 +17,7 @@ namespace Dice_Game
             string name;
             int selection = 0;
             double bank = 100, betAmount = 0;
-            bool validSelection = false;
+            bool validSelection = false, quit = false;
             Die die1 = new Die();
             Thread.Sleep(1000);
             Die die2 = new Die();
@@ -27,7 +27,7 @@ namespace Dice_Game
             name = Console.ReadLine().Trim();
             Console.Clear();
 
-            while (bank > 0)
+            while (quit == false)
             {
                 die1.RollDie();
                 die2.RollDie();
@@ -42,6 +42,7 @@ namespace Dice_Game
                 Console.WriteLine("2. Not Doubles: Win half your bet!");
                 Console.WriteLine("3. Even Sum: Win your bet!");
                 Console.WriteLine("4. Odd Sum: Win your bet!");
+                Console.WriteLine("5. To quit type 5!");
                 Console.Write("What game would you like to play? ");
                 while (validSelection == false)
                 {
@@ -63,6 +64,11 @@ namespace Dice_Game
                         {
                             validSelection = true;
                         }
+                        else if (selection == 5)
+                        {
+                            validSelection = true;
+                            quit = true; 
+                        }
                         else
                         {
                             Console.Write("Error, what game would you like to play: ");
@@ -75,11 +81,13 @@ namespace Dice_Game
                 }
                 validSelection = false;
 
-                Console.Write("Enter your bet amount: ");
+                if (quit == false)
+                {
+                    Console.Write("Enter your bet amount: ");
 
                     if (Double.TryParse(Console.ReadLine(), out betAmount))
                     {
-                       
+
                         if (betAmount > bank)
                         {
                             betAmount = bank;
@@ -95,106 +103,122 @@ namespace Dice_Game
                         betAmount = 0.00;
                     }
                     Console.WriteLine($"You've bet: ${betAmount}.");
-                    
 
-                Console.WriteLine();
 
-                if (selection == 1)
-                {
-                    Console.WriteLine("Welcome to the Doubles table, Your rolls are....");
-                    Thread.Sleep(1000);
-                    die1.DrawRoll();
-                    Thread.Sleep(1000);
-                    die2.DrawRoll();
                     Console.WriteLine();
 
-                    if (die1.Roll == die2.Roll)
+                    if (selection == 1)
                     {
-                        bank += betAmount*2;
+                        Console.WriteLine("Welcome to the Doubles table, Your rolls are....");
+                        Thread.Sleep(1000);
+                        die1.DrawRoll();
+                        Thread.Sleep(1000);
+                        die2.DrawRoll();
+                        Console.WriteLine();
 
-                        Console.WriteLine($"WINNER WINNER Chicken dinner, you now have ${bank}.");
+                        if (die1.Roll == die2.Roll)
+                        {
+                            bank += betAmount * 2;
+
+                            Console.WriteLine($"WINNER WINNER Chicken dinner, you now have ${bank}.");
+                        }
+                        else
+                        {
+                            bank -= betAmount;
+                            Console.WriteLine($"Wah wah, Massive Loser! You now have ${bank}.");
+                        }
+                    }
+                    else if (selection == 2)
+                    {
+                        Console.WriteLine("Welcome to the Not Doubles table, Your rolls are....");
+                        Thread.Sleep(1000);
+                        die1.DrawRoll();
+                        Thread.Sleep(1000);
+                        die2.DrawRoll();
+                        Console.WriteLine();
+
+                        if (die1.Roll != die2.Roll)
+                        {
+                            bank += betAmount * 0.5;
+
+                            Console.WriteLine($"WINNER WINNER Chicken dinner, you now have ${bank}.");
+                        }
+                        else
+                        {
+                            bank -= betAmount;
+                            Console.WriteLine($"Wah wah, Unlucky Loser! You now have ${bank}.");
+                        }
+                    }
+                    else if (selection == 3)
+                    {
+                        Console.WriteLine("Welcome to the Even Sum table, Your rolls are....");
+                        Thread.Sleep(1000);
+                        die1.DrawRoll();
+                        Thread.Sleep(1000);
+                        die2.DrawRoll();
+                        Console.WriteLine();
+
+                        if ((die1.Roll + die2.Roll) % 2 == 0)
+                        {
+                            bank += betAmount;
+
+                            Console.WriteLine($"WINNER WINNER Chicken dinner, you now have ${bank}.");
+                        }
+                        else
+                        {
+                            bank -= betAmount;
+                            Console.WriteLine($"Wah wah, Crybaby Loser! You now have ${bank}.");
+                        }
+                    }
+                    else if (selection == 4)
+                    {
+                        Console.WriteLine("Welcome to the Odd Sum table, Your rolls are....");
+                        Thread.Sleep(1000);
+                        die1.DrawRoll();
+                        Thread.Sleep(1000);
+                        die2.DrawRoll();
+                        Console.WriteLine();
+
+                        if ((die1.Roll + die2.Roll) % 2 != 0)
+                        {
+                            bank += betAmount;
+
+                            Console.WriteLine($"WINNER WINNER Chicken dinner, you now have ${bank}.");
+                        }
+                        else
+                        {
+                            bank -= betAmount;
+                            Console.WriteLine($"Wah wah, Lame Loser! You now have ${bank}.");
+                        }
                     }
                     else
                     {
-                        bank -= betAmount;
-                        Console.WriteLine($"Wah wah, Massive Loser! You now have ${bank}.");
+                        Console.WriteLine("ERROR");
                     }
-                }
-                else if (selection == 2)
-                {
-                    Console.WriteLine("Welcome to the Not Doubles table, Your rolls are....");
-                    Thread.Sleep(1000);
-                    die1.DrawRoll();
-                    Thread.Sleep(1000);
-                    die2.DrawRoll();
-                    Console.WriteLine();
 
-                    if (die1.Roll != die2.Roll)
+                    if (bank <= 0)
                     {
-                        bank += betAmount * 0.5;
+                        quit = true;
+                    }
 
-                        Console.WriteLine($"WINNER WINNER Chicken dinner, you now have ${bank}.");
-                    }
-                    else
-                    {
-                        bank -= betAmount;
-                        Console.WriteLine($"Wah wah, Unlucky Loser! You now have ${bank}.");
-                    }
-                }
-                else if (selection == 3)
-                {
-                    Console.WriteLine("Welcome to the Even Sum table, Your rolls are....");
-                    Thread.Sleep(1000);
-                    die1.DrawRoll();
-                    Thread.Sleep(1000);
-                    die2.DrawRoll();
-                    Console.WriteLine();
-
-                    if ((die1.Roll + die2.Roll)%2==0)
-                    {
-                        bank += betAmount;
-
-                        Console.WriteLine($"WINNER WINNER Chicken dinner, you now have ${bank}.");
-                    }
-                    else
-                    {
-                        bank -= betAmount;
-                        Console.WriteLine($"Wah wah, Crybaby Loser! You now have ${bank}.");
-                    }
-                }
-                else if (selection == 4)
-                {
-                    Console.WriteLine("Welcome to the Odd Sum table, Your rolls are....");
-                    Thread.Sleep(1000);
-                    die1.DrawRoll();
-                    Thread.Sleep(1000);
-                    die2.DrawRoll();
-                    Console.WriteLine();
-
-                    if ((die1.Roll + die2.Roll) % 2 != 0)
-                    {
-                        bank += betAmount;
-
-                        Console.WriteLine($"WINNER WINNER Chicken dinner, you now have ${bank}.");
-                    }
-                    else
-                    {
-                        bank -= betAmount;
-                        Console.WriteLine($"Wah wah, Lame Loser! You now have ${bank}.");
-                    }
+                    Console.ReadLine();
+                    Console.Clear();
                 }
                 else
                 {
-                    Console.WriteLine("ERROR");
-                }
-                    
-
-                Console.ReadLine();
-                Console.Clear();
+                    quit = true;                   
+                }          
             }
-            
-            Console.WriteLine("You're Broke! You're escorted out of the Casino.");
-            Console.WriteLine("Have a great day.");
+
+            if (bank <= 0)
+            {
+                Console.WriteLine("You're Broke! You're escorted out of the Casino.");
+                Console.WriteLine("Have a great day.");
+            }
+            else
+            {
+                Console.WriteLine("You leave the casino.");
+            }
             Console.ReadLine();
         }
 
